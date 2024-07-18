@@ -14,6 +14,14 @@ const Form = () => {
     
     })
     let [islogin,setIslogin]=useState(false)
+    let [usererror,setError]=useState({
+        username:false,
+        email:false,
+        password:false
+    })
+    
+
+
 const handlelogin=(e)=>{
     e.preventDefault()
     let {name,value}=e.target
@@ -39,6 +47,7 @@ const handlelogin=(e)=>{
             theme: "colored",
             transition: Bounce,
             });
+           
     }
     else{
         toast.error('🦄 login fail!', {
@@ -52,12 +61,17 @@ const handlelogin=(e)=>{
             theme: "colored",
             transition: Bounce,
             });
+           
     }
  }
+ let passRegex=/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/ 
+ let emailRegex=/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+
  const handleSubmit=(e)=>{
     e.preventDefault()
-    if(userdata.username.length>0 && userdata.email.length>0 && userdata.password.length>0){
-        setIslogin(true)
+    if(passRegex.test(userdata.password) && emailRegex.test(userdata.email)){
+        
+         setIslogin(true)
         toast.success('🦄 suceess!', {
             position: "top-center",
             autoClose: 5000,
@@ -69,6 +83,7 @@ const handlelogin=(e)=>{
             theme: "dark",
             transition: Bounce,
             });
+            setError({...usererror,password:true,username:true,email:true})
     }
     else{
         setIslogin(false)
@@ -83,6 +98,7 @@ const handlelogin=(e)=>{
             theme: "dark",
             transition: Bounce,
             });
+             setError({...usererror,password:false})
     }
  }  
   return (
@@ -92,7 +108,10 @@ const handlelogin=(e)=>{
             islogin?(
                 <form onSubmit={userData}>
                      <label>Eamil:</label>
-                <input type="email" placeholder='Enter Eamil' value={login.email} name='useremail' onChange={handlelogin}/>
+                <input type="email" 
+                placeholder='Enter Eamil' 
+                value={login.email} 
+                name='useremail' onChange={handlelogin}/>
                 <br />
                 <label>Password:</label>
                 <input type="text" placeholder='Enter Password' value={login.password} name='userpassword' onChange={handlelogin} />
@@ -104,13 +123,20 @@ const handlelogin=(e)=>{
             
             <form onSubmit={handleSubmit}>
                 <label>UserName:</label>
-                <input type="text" placeholder='Enter Username'  value={userdata.username} name='username' onChange={handelData}/>
+                <input type="text"
+                 placeholder='Enter Username'  
+                 value={userdata.username}
+                  name='username' 
+                  onChange={handelData}
+                  style={{borderColor:usererror.username?"red":userdata.username.length>0?"green":"blue"}}/>
                 <br />
                 <label>Eamil:</label>
-                <input type="email" placeholder='Enter Eamil' value={userdata.email} name='email' onChange={handelData}/>
+                <input type="email" placeholder='Enter Eamil' value={userdata.email} name='email' onChange={handelData}
+                style={{borderColor:usererror.email?"red":userdata.email.length>0?"green":"blue"}}/>
                 <br />
                 <label>Password:</label>
-                <input type="text" placeholder='Enter Password' value={userdata.password} name='password' onChange={handelData} />
+                <input type="text" placeholder='Enter Password' value={userdata.password} name='password' onChange={handelData}
+                style={{borderColor:usererror.password?"red":userdata.password.length>0?"green":"blue"}} />
                 <br />
                 <button type='submit'>Sigin</button>
             </form>
